@@ -1,0 +1,33 @@
+{
+  "name": "lodash.getpath",
+  "version": "0.1.0",
+  "description": "A lodash plugin extension for _.get, which allows intuitive paths such as 'a.b[].x[0].z'",
+  "main": "src/getPath.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crazy4groovy/lodash.getPath.git"
+  },
+  "keywords": [
+    "modules",
+    "util",
+    "lodash",
+    "extension",
+    "mixin",
+    "lodash-mixin"
+  ],
+  "author": "Steven Olsen @crazy4groovy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/crazy4groovy/lodash.getPath/issues"
+  },
+  "homepage": "https://github.com/crazy4groovy/lodash.getPath#readme",
+  "peerDependencies": {
+    "lodash": ">= 3.0.0"
+  }
+}
