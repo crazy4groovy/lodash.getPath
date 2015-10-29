@@ -56,5 +56,5 @@ if (typeof module === 'object') {
 	module.exports = require('lodash').runInContext().mixin({
 		getPath: _getPath
 	});
-	console.log('mixed in: _getPath');
+	//console.log('mixed in: _getPath');
 }
