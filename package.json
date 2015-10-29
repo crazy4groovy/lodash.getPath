@@ -1,6 +1,6 @@
 {
-  "name": "lodash.getpath",
-  "version": "0.1.1",
+  "name": "lodash-getpath",
+  "version": "0.1.2",
   "description": "A lodash plugin extension for _.get, which allows intuitive paths such as 'a.b[].x[0].z'",
   "main": "src/getPath.js",
   "directories": {
