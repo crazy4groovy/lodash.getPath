@@ -1,6 +1,7 @@
 /*	project: getPath
 	author: Steven Olsen @crazy4groovy
 	description: A lodash plugin extension for _.get, which allows intuitive paths such as 'a.b[].x[0].z'
+	license: MIT
 */
 if (typeof module === 'object' && require) {
 	var _ = require('lodash');
@@ -9,12 +10,12 @@ if (typeof module === 'object' && require) {
 function _getPath(obj, path, _default) {
 	if (!_.isString(path)) return obj;
 
-	var paths = path.match(/(.*?)(?:\[(-?\d*)\]\.?)/);
-	//eg. paths = ["a.b[0]", "a.b", "0"]
+	var paths = path.match(/(.*?)(?:\[(-\d+)?\]\.?)/);
+	//eg. paths = ["a.b[-1]", "a.b", "-1"]
 	//console.log('get:', obj, paths);
 
 	if (!Array.isArray(paths)) {
-		//console.log('not-parsable:', path);
+		//console.log('not-parsable:', path, paths);
 		return _.get(obj, path, _default);
 	}
 
@@ -43,10 +44,8 @@ function _getPath(obj, path, _default) {
 	}
 
 	if (paths[2]) {
-		paths[2] = +paths[2]; // must be an int, given the RegExp
-		// support negative indexes!
-		var idx = (paths[2] >= 0) ? (paths[2]) : (obj.length + paths[2]);
-		return obj[idx];
+		// it must be a negative index, given the RegExp
+		return obj[obj.length + +paths[2]];
 	}
 
 	return obj;

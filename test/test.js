@@ -14,17 +14,17 @@ describe('getPath', function() {
 		describe('[] (no index) tests', function () {
 			it('should return the expected values', function () {
 				testPath(x1, 'a[].b',         [[{x:2},{x:3}],[{x:1},{x:9}]]);
-				testPath(x1, 'a[].b[].x',     [[2,3], [1,9]]);
-				testPath(x1, 'a[].b[].x[].z', [[[null], [null]], [[null], [null]]]);
+				testPath(x1, 'a[].b[].x',     [[2,3],[1,9]]);
+				testPath(x1, 'a[].b[].x[].z', [[[null],[null]],[[null],[null]]]);
 			});
 		});
 		describe('[n] (index) tests', function () {
 			it('should return the expected values', function () {
-				testPath(x1, 'a[0].b',         [{x:2},{x:3}]);
 				testPath(x1, 'a[1].b',         [{x:1},{x:9}]);
+				testPath(x1, 'a[0].b',         [{x:2},{x:3}]);
 				testPath(x1, 'a[-2].b',        [{x:2},{x:3}]);
 				testPath(x1, 'a[].b[0].x',     [2,1]);
-				testPath(x1, 'a[].b[].x[0].z', [[[null], [null]], [[null], [null]]]);
+				testPath(x1, 'a[].b[].x[0].z', [[null,null],[null,null]]);
 			});
 		});
 	});

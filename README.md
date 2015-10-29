@@ -9,7 +9,8 @@ A [lodash](https://lodash.com/) plugin/extension/[mixin](https://lodash.com/docs
 ## Usage
 
 ```js
-var _ = require('lodash-getpath');
+var _ = require('lodash-getpath'); // lodash with the mixin provided
+
 console.log(_.getPath({a:[1,2,3]}, 'a[0]')); 
 // 1
 console.log(_.getPath({a:[1,2,3]}, 'a[-1]')); 
@@ -18,4 +19,4 @@ console.log(_.getPath({people:[{name:'Steve'},{name:'Sam'}]}, 'people[].name'));
 // ['Steve', 'Sam']
 ```
 
-Also available in the browser as simply `_getPath()`
+Also available in the browser as simply `_getPath()` in the global context/window
