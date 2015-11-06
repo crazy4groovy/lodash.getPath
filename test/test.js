@@ -14,6 +14,7 @@ describe('getPath', function() {
 		describe('[] (no index) tests', function () {
 			it('should return the expected values', function () {
 				testPath(x1, 'a[].b',         [[{x:2},{x:3}],[{x:1},{x:9}]]);
+				testPath(x1, 'a[].b[]',       [[{x:2},{x:3}],[{x:1},{x:9}]]);
 				testPath(x1, 'a[].b[].x',     [[2,3],[1,9]]);
 				testPath(x1, 'a[].b[].x[].z', [[[null],[null]],[[null],[null]]]);
 			});
@@ -27,6 +28,16 @@ describe('getPath', function() {
 				testPath(x1, 'a[].b[].x[0].z', [[null,null],[null,null]]);
 			});
 		});
+		describe('[n,m] (indexes) tests', function () {
+			it('should return the expected values', function () {
+				testPath(x1, 'a[0,1].b',       [[{x:2},{x:3}],[{x:1},{x:9}]]);
+				testPath(x1, 'a[1,0].b',       [[{x:1},{x:9}],[{x:2},{x:3}]]);
+				testPath(x1, 'a[1,0].b[]',     [[{x:1},{x:9}],[{x:2},{x:3}]]);
+				testPath(x1, 'a[-2,-1].b',     [[{x:2},{x:3}],[{x:1},{x:9}]]);
+				testPath(x1, 'a[].b[0,1].x',   [[2,3],[1,9]]);
+				testPath(x1, 'a[].b[0,1].x[-1].z', [[[null],[null]],[[null],[null]]]);
+			});
+		});
 	});
 
 	describe('x2', function () {
@@ -35,11 +46,19 @@ describe('getPath', function() {
 		describe('[] (no index) tests', function () {
 			it('should return the expected values', function () {
 				testPath(x2, 'a[].b[].x', [[null,3],[1,null]]);
+				testPath(x2, 'a[].b[].y', [[2,null],[null,9]]);
 			});
 		});
 		describe('[n] (index) tests', function () {
 			it('should return the expected values', function () {
-				testPath(x2, 'a[].b[1].x', [3,null]);
+				testPath(x2, 'a[].b[1].x',  [3,null]);
+				testPath(x2, 'a[].b[-2].y', [2,null]);
+			});
+		});
+		describe('[n,m] (indexes) tests', function () {
+			it('should return the expected values', function () {
+				testPath(x2, 'a[].b[1,0].x',  [[3,null],[null,1]]);
+				testPath(x2, 'a[].b[-2,0].y', [[2,2],[null,null]]);
 			});
 		});
 	});
@@ -61,6 +80,11 @@ describe('getPath', function() {
 				testPath(x3, '[0].b[-1].y[-1].z[].q', [true], true);
 			});
 		});
+		describe('[n,m] (indexes) tests', function () {
+			it('should return the expected values', function () {
+				testPath(x3, '[0,0,0].b[].x',           [[2,3],[2,3],[2,3]]);
+			});
+		});
 	});
 
 	describe('x4', function () {
@@ -77,7 +101,7 @@ describe('getPath', function() {
 			});
 		});
 	});
-	
+
 	describe('funky', function  () {
 		it('should bail out nicely', function () {
 			testPath({a:[1,2,3]}, 'a[applesauce]', undefined);

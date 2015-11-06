@@ -7,24 +7,60 @@ if (typeof module === 'object' && require) {
 	var _ = require('lodash');
 }
 
-function _getPath(obj, path, _default) {
-	if (!_.isString(path)) return obj;
+var multiIndexesRegex = '(-?\\d+)(,-?\\d+)+';
+
+function matchPath(path) {
+	var result;
 
 	var paths = path.match(/(.*?)(?:\[(-\d+)?\]\.?)/);
 	//eg. paths = ["a.b[-1]", "a.b", "-1"]
-	//console.log('get:', obj, paths);
+	//paths && console.log('**matched paths:', paths);
 
-	if (!Array.isArray(paths)) {
+	var pathsIndicies = path.match(new RegExp('(.*?)(?:\\[' + multiIndexesRegex + '\\]\\.?)'));
+	//eg. ["a[0,1]", "a", "0", ",1,2"]
+	//pathsIndicies && console.log('**matched pathsIndicies:', pathsIndicies);
+
+	if (paths) {
+		var p = result = {
+			matched: paths[0],
+			_get: paths[1],
+			indicies: paths[2]? [paths[2]] : undefined
+		};
+	}
+
+	if (pathsIndicies) {
+		var pi = result = {
+			matched: pathsIndicies[0],
+			_get: pathsIndicies[1],
+			indicies: pathsIndicies[0].match(new RegExp(multiIndexesRegex))[0].split(',')
+		}
+	}
+
+	if (paths && pathsIndicies) {
+		// process the *smallest* path matched
+		return p.matched.length < pi.matched.length ? p : pi;
+	}
+
+	return result;
+}
+
+function _getPath(obj, path, _default) {
+	if (!_.isString(path)) return obj;
+
+	//console.log('match:', obj, path);
+	var matchResults = matchPath(path);
+
+	if (!matchResults) {
 		//console.log('not-parsable:', path, paths);
 		return _.get(obj, path, _default);
 	}
 
-	if (paths[1]) {
-		obj = _.get(obj, paths[1], _default);
+	if (matchResults._get) {
+		obj = _.get(obj, matchResults._get, _default);
 		//console.log('obj:', obj);
 	}
 
-	path = path.slice(paths[0].length);
+	path = path.slice(matchResults.matched.length);
 	if (path) {
 		// _getPath the rest of the path...
 		//console.log('path:', path);
@@ -43,9 +79,16 @@ function _getPath(obj, path, _default) {
 		}
 	}
 
-	if (paths[2]) {
-		// it must be a negative index, given the RegExp
-		return obj[obj.length + +paths[2]];
+	if (matchResults.indicies && Array.isArray(obj)) {
+		var vals = [];
+		_.forEach(matchResults.indicies, function(idx) {
+			idx = +idx;
+			if (idx < 0) {
+				idx = obj.length + idx;
+			}
+			vals.push(obj[idx]);
+		});
+		return vals.length === 1 ? vals[0] : vals;
 	}
 
 	return obj;
