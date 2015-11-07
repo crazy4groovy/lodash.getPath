@@ -1,47 +1,34 @@
 /*	project: getPath
 	author: Steven Olsen @crazy4groovy
-	description: A lodash plugin extension for _.get, which allows intuitive paths such as 'a.b[].x[0].z'
+	description: A lodash plugin extension for _.get, which allows intuitive paths eg. 'name[0,1]' and 'a.b[].x[-1].z'
 	license: MIT
 */
 if (typeof module === 'object' && require) {
 	var _ = require('lodash');
 }
 
-var multiIndexesRegex = '(-?\\d+)(,-?\\d+)+';
-
 function matchPath(path) {
-	var result;
-
-	var paths = path.match(/(.*?)(?:\[(-\d+)?\]\.?)/);
-	//eg. paths = ["a.b[-1]", "a.b", "-1"]
-	//paths && console.log('**matched paths:', paths);
-
-	var pathsIndicies = path.match(new RegExp('(.*?)(?:\\[' + multiIndexesRegex + '\\]\\.?)'));
-	//eg. ["a[0,1]", "a", "0", ",1,2"]
+	var pathsIndicies = path.match(/(.*?)(?:\[(-?\d+)?(,-?\d+)*\]\.?)/);
+	//console.log(pathsIndicies);
+	//eg. ["a.b[-1]", "a.b", "-1"]
+	//eg. ["a.b[0,1,2]", "a.b", "0", ",1,2"]
 	//pathsIndicies && console.log('**matched pathsIndicies:', pathsIndicies);
 
-	if (paths) {
-		var p = result = {
-			matched: paths[0],
-			_get: paths[1],
-			indicies: paths[2]? [paths[2]] : undefined
-		};
-	}
-
 	if (pathsIndicies) {
-		var pi = result = {
+		var idxs;
+		if (pathsIndicies[3]) {
+			// a list of indicies
+			idxs = pathsIndicies[0].match(/\[([^\]]*)\]/)[1].split(',');
+		} else if (pathsIndicies[2]) {
+			// a single index
+			idxs = [pathsIndicies[2]];
+		}
+		return {
 			matched: pathsIndicies[0],
 			_get: pathsIndicies[1],
-			indicies: pathsIndicies[0].match(new RegExp(multiIndexesRegex))[0].split(',')
+			indicies: idxs
 		}
 	}
-
-	if (paths && pathsIndicies) {
-		// process the *smallest* path matched
-		return p.matched.length < pi.matched.length ? p : pi;
-	}
-
-	return result;
 }
 
 function _getPath(obj, path, _default) {

@@ -25,7 +25,7 @@ describe('getPath', function() {
 				testPath(x1, 'a[0].b',         [{x:2},{x:3}]);
 				testPath(x1, 'a[-2].b',        [{x:2},{x:3}]);
 				testPath(x1, 'a[].b[0].x',     [2,1]);
-				testPath(x1, 'a[].b[].x[0].z', [[null,null],[null,null]]);
+				testPath(x1, 'a[].b[].x[0].z', [[[null],[null]],[[null],[null]]]);
 			});
 		});
 		describe('[n,m] (indexes) tests', function () {
@@ -82,7 +82,7 @@ describe('getPath', function() {
 		});
 		describe('[n,m] (indexes) tests', function () {
 			it('should return the expected values', function () {
-				testPath(x3, '[0,0,0].b[].x',           [[2,3],[2,3],[2,3]]);
+				testPath(x3, '[0,0,0].b[].x', [[2,3],[2,3],[2,3]]);
 			});
 		});
 	});
@@ -98,6 +98,37 @@ describe('getPath', function() {
 		describe('[n] (index) tests', function () {
 			it('should return the expected values', function () {
 				testPath(x4, 'a[-2].b.c', 10);
+			});
+		});
+	});
+
+	describe('x5', function () {
+		var x5 = [[[1,2],[3,4]],[5,6],[7,8]];
+
+		describe('[] (no index) tests', function () {
+			it('should return the expected values', function () {
+				testPath(x5, '[]',   [[[1,2],[3,4]],[5,6],[7,8]]);
+				testPath(x5, '[][]', [[[1,2],[3,4]],[5,6],[7,8]]);
+			});
+		});
+		describe('[n] (index) tests', function () {
+			it('should return the expected values', function () {
+				testPath(x5, '[][0]',    [[1,2],5,7]);
+				testPath(x5, '[][-1]',   [[3,4],6,8]);
+				testPath(x5, '[0]',      [[1,2],[3,4]]);
+				testPath(x5, '[1]',      [5,6]);
+				testPath(x5, '[][1]',    [[3,4],6,8]);
+				testPath(x5, '[][1][1]', [4,6,8]);
+				testPath(x5, '[1][1]',   6);
+			});
+		});
+		describe('[n,m] (indexes) tests', function () {
+			it('should return the expected values', function () {
+				testPath(x5, '[0,0,0]',       [[[1,2],[3,4]],[[1,2],[3,4]],[[1,2],[3,4]]]);
+				testPath(x5, '[0,0,0][0]',    [[1,2],[1,2],[1,2]]);
+				testPath(x5, '[0,0,0][0][0]', [1,1,1]);
+				testPath(x5, '[1,2,1]',       [[5,6],[7,8],[5,6]]);
+				testPath(x5, '[1,-1,0,-2]',   [[5,6],[7,8],[[1,2],[3,4]],[5,6]]);
 			});
 		});
 	});
