@@ -14,31 +14,46 @@ function _getPath(obj, path, _default) {
 
 	if (!_.isString(path)) return obj;
 
-	function matchPath() {
-		var pathsIndicies = path.match(/(.*?)(?:\[(-?\d+)?(,-?\d+)*\]\.?)/);
-		//console.log(pathsIndicies);
-		//eg. ["a.b[-1]", "a.b", "-1"]
-		//eg. ["a.b[0,1,2]", "a.b", "0", ",2"] *not all indicies caught in last match item!
+	function matchPath(_getPath) {
+		_getPath = _getPath || ''; // the _get-friendly path from prev recursions
 
-		if (pathsIndicies) {
+		var pathsIndices = path.slice(_getPath.length).match(/(.*?)(?:\[(-?\d+)?(,-?\d+)*\]\.?)/);
+		//eg. ["a.b[-1]", "a.b", "-1"]
+		//eg. ["a.b[0,1,2]", "a.b", "0", ",2"] *not all indices caught in last match item!
+		//console.log(pathsIndices, ';;', _getPath);
+
+		if (pathsIndices) {
 			var idxs;
-			if (pathsIndicies[3]) {
-				// a list of indicies
-				idxs = pathsIndicies[0].match(/\[([^\]]*)\]/)[1].split(',');
-			} else if (pathsIndicies[2]) {
+			if (pathsIndices[3]) {
+				// a list of indices
+				idxs = pathsIndices[0].match(/\[([^\]]*)\]/)[1].split(',');
+			} else if (pathsIndices[2]) {
 				// a single index
-				idxs = [pathsIndicies[2]];
+				idxs = [pathsIndices[2]];
 			}
+
+			if (idxs) {
+				idxs = _.map(idxs, function(idx) { return +idx });
+
+				if (idxs.length === 1 && idxs[0] >= 0) {
+					// _get can handle [0+] idx already, let's allow it, and match some more!
+					_getPath += pathsIndices[0];
+					//console.log(_getPath);
+					return matchPath(_getPath); // recursion!
+				}
+			}
+
 			return {
-				matched: pathsIndicies[0],
-				_get: pathsIndicies[1],
-				indicies: idxs
+				matched:  _getPath + pathsIndices[0],
+				_get:     _getPath + pathsIndices[1],
+				indices: idxs
 			}
 		}
 	}
 
 	//console.log('match:', obj, path);
 	var matchResults = matchPath();
+	//console.log(matchResults);
 
 	if (!matchResults) {
 		//console.log('not-parsable:', path, paths);
@@ -54,6 +69,8 @@ function _getPath(obj, path, _default) {
 	if (path) {
 		//console.log('path:', path);
 		if (!_.isObject(obj)) {
+			if (matchResults.indices && matchResults.indices.length == 1) 
+				return _default;
 			return [_default];
 		}
 		// _getPath the rest of the path...recursively!
@@ -62,19 +79,16 @@ function _getPath(obj, path, _default) {
 		for (var prop in _obj) {
 			if (!_obj.hasOwnProperty(prop)) continue;
 			//console.log('val:', _obj[prop], path);
-			var recurseResult = _getPath(_obj[prop], path, _default);
+			var recurseResult = _getPath(_obj[prop], path, _default); // recursion!
 			//console.log('recurse:', recurseResult);
 			obj.push(recurseResult);
 		}
 	}
 
-	if (matchResults.indicies && Array.isArray(obj)) {
+	if (matchResults.indices && _.isArray(obj)) {
 		var vals = [];
-		_.forEach(matchResults.indicies, function(idx) {
-			idx = +idx;
-			if (idx < 0) {
-				idx = obj.length + idx;
-			}
+		_.forEach(matchResults.indices, function(idx) {
+			idx = (idx < 0) ? (obj.length + idx) : idx;
 			vals.push(obj[idx]);
 		});
 		return vals.length === 1 ? vals[0] : vals;

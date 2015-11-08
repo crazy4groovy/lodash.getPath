@@ -25,7 +25,7 @@ describe('getPath', function() {
 				testPath(x1, 'a[0].b',         [{x:2},{x:3}]);
 				testPath(x1, 'a[-2].b',        [{x:2},{x:3}]);
 				testPath(x1, 'a[].b[0].x',     [2,1]);
-				testPath(x1, 'a[].b[].x[0].z', [[[null],[null]],[[null],[null]]]);
+				testPath(x1, 'a[].b[].x[0].z', [[null,null],[null,null]]);
 			});
 		});
 		describe('[n,m] (indexes) tests', function () {
@@ -35,7 +35,8 @@ describe('getPath', function() {
 				testPath(x1, 'a[1,0].b[]',     [[{x:1},{x:9}],[{x:2},{x:3}]]);
 				testPath(x1, 'a[-2,-1].b',     [[{x:2},{x:3}],[{x:1},{x:9}]]);
 				testPath(x1, 'a[].b[0,1].x',   [[2,3],[1,9]]);
-				testPath(x1, 'a[].b[0,1].x[-1].z', [[[null],[null]],[[null],[null]]]);
+				testPath(x1, 'a[].b[0,1].x[-1].z', [[null,null],[null,null]]);
+				testPath(x1, 'a[].b[0,1].x[0].z',  [[null,null],[null,null]]);
 			});
 		});
 	});
@@ -77,7 +78,7 @@ describe('getPath', function() {
 			it('should return the expected values', function () {
 				testPath(x3, '[0].b[].x',             [2,3]);
 				testPath(x3, '[-1].b[-1].y',          9);
-				testPath(x3, '[0].b[-1].y[-1].z[].q', [true], true);
+				testPath(x3, '[0].b[-1].y[-1].z[].q', true, true);
 			});
 		});
 		describe('[n,m] (indexes) tests', function () {
@@ -118,7 +119,7 @@ describe('getPath', function() {
 				testPath(x5, '[0]',      [[1,2],[3,4]]);
 				testPath(x5, '[1]',      [5,6]);
 				testPath(x5, '[][1]',    [[3,4],6,8]);
-				testPath(x5, '[][1][1]', [4,6,8]);
+				testPath(x5, '[][1][1]', [4,null,null]);
 				testPath(x5, '[1][1]',   6);
 			});
 		});
