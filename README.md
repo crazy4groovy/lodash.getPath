@@ -1,4 +1,4 @@
-[![Travis](https://img.shields.io/travis/crazy4groovy/lodash.getPath.svg)]()
+[![Travis](https://img.shields.io/travis/crazy4groovy/lodash.getPath.svg)](https://travis-ci.org/crazy4groovy/lodash.getPath)
 
 # lodash-getpath
 
