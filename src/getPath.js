@@ -22,32 +22,32 @@ function _getPath(obj, path, _default) {
 		//eg. ["a.b[0,1,2]", "a.b", "0", ",2"] *not all indices caught in last match item!
 		//console.log(pathsIndices, ';;', _getPath);
 
-		if (pathsIndices) {
-			var idxs;
-			if (pathsIndices[3]) {
-				// a list of indices
-				idxs = pathsIndices[0].match(/\[([^\]]*)\]/)[1].split(',');
-			} else if (pathsIndices[2]) {
-				// a single index
-				idxs = [pathsIndices[2]];
-			}
+		if (!pathsIndices) return; // _get can just handle this path!
 
-			if (idxs) {
-				idxs = _.map(idxs, function(idx) { return +idx });
+		var idxs;
+		if (pathsIndices[3]) {
+			// a list of indices
+			idxs = pathsIndices[0].match(/\[([^\]]*)\]/)[1].split(',');
+		} else if (pathsIndices[2]) {
+			// a single index
+			idxs = [pathsIndices[2]];
+		}
 
-				if (idxs.length === 1 && idxs[0] >= 0) {
-					// _get can handle [0+] idx already, let's allow it, and match some more!
-					_getPath += pathsIndices[0];
-					//console.log(_getPath);
-					return matchPath(_getPath); // recursion!
-				}
-			}
+		if (idxs) {
+			idxs = _.map(idxs, function(idx) { return +idx });
 
-			return {
-				matched:  _getPath + pathsIndices[0],
-				_get:     _getPath + pathsIndices[1],
-				indices: idxs
+			if (idxs.length === 1 && idxs[0] >= 0) {
+				// _get can handle [0+] idx already, let's allow it, and match some more!
+				_getPath += pathsIndices[0];
+				//console.log(_getPath);
+				return matchPath(_getPath); // recursion!
 			}
+		}
+
+		return {
+			matched:  _getPath + pathsIndices[0],
+			_get:     _getPath + pathsIndices[1],
+			indices: idxs
 		}
 	}
 
@@ -69,7 +69,7 @@ function _getPath(obj, path, _default) {
 	if (path) {
 		//console.log('path:', path);
 		if (!_.isObject(obj)) {
-			if (matchResults.indices && matchResults.indices.length == 1) 
+			if (matchResults.indices && matchResults.indices.length == 1)
 				return _default;
 			return [_default];
 		}
