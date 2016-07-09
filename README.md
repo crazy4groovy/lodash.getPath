@@ -32,5 +32,6 @@ console.log(_.getPath({people:[{name:'Steve'},{name:'Sam'}]}, 'people[].name'));
 // ['Steve', 'Sam']
 </pre>
 
-
 Also available in the browser as simply `_getPath()` in the global context/window
+
+Currently built using `lodash ^4.0.0`
