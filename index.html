@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Lodash.getpath by crazy4groovy</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Lodash.getpath</h1>
+        <p>A lodash plugin extension for _.get, which allows intuitive paths eg. &#39;name[0,1]&#39; and &#39;a.b[].x[-1].z&#39;</p>
+
+        <p class="view"><a href="https://github.com/crazy4groovy/lodash.getPath">View the Project on GitHub <small>crazy4groovy/lodash.getPath</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/crazy4groovy/lodash.getPath/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/crazy4groovy/lodash.getPath/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/crazy4groovy/lodash.getPath">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><a href="https://travis-ci.org/crazy4groovy/lodash.getPath"><img src="https://img.shields.io/travis/crazy4groovy/lodash.getPath.svg" alt="Travis"></a></p>
+
+<h1>
+<a id="lodash-getpath" class="anchor" href="#lodash-getpath" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>lodash-getpath</h1>
+
+<p>A <a href="https://lodash.com/">lodash</a> plugin/extension/<a href="https://lodash.com/docs#mixin">mixin</a> for <a href="https://lodash.com/docs#get">_.get</a>, which allows intuitive paths eg. 'name[0,1]' and 'a.b[].x[-1].z'</p>
+
+<h2>
+<a id="what-for" class="anchor" href="#what-for" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What for?</h2>
+
+<p>Above-and-beyond pathing syntax for nested-Array properties:</p>
+
+<ul>
+<li>+/-ve index --&gt; returns value from start/end of Array</li>
+<li>
+<code>[0,1,-2]</code> list of indexes --&gt; returns a (spliced) Array</li>
+<li>
+<code>[]</code> all indexes --&gt; returns a (whole) Array</li>
+</ul>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install</h2>
+
+<p><code>npm install --save lodash-getpath</code></p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<pre>
+var _ = require('lodash-getpath'); // import lodash with the mixin provided
+
+// simple object example
+var obj1 = { a: [1, 2, 3] };
+_.getPath(obj1, 'a[0]') === 1;           // positive index
+_.getPath(obj1, 'a[0, 2]') === [1, 3];   // positive indexes
+_.getPath(obj1, 'a[1, 1]') === [2, 2];   // repeated indexes (ok!)
+_.getPath(obj1, 'a[-1]') === 3;          // negative index
+_.getPath(obj1, 'a[-1, -2]') === [3, 2]; // negative indexes
+
+// a little more complex object
+var pathUsersNames = 'users[].name';
+_.getPath({ users: [{ name: 'Steve' },{ name: 'Sam' }] }, pathUsersNames) === ['Steve', 'Sam']; // all indexes, with sub-key
+
+// *any* complex object/array structure you can think of, pull out the data you need in a single query!
+...
+</pre>
+
+<p>Also available in the browser as simply <code>_getPath()</code> in the global context/window</p>
+
+<p>Currently built using <code>lodash ^4.0.0</code></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/crazy4groovy">crazy4groovy</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
