@@ -18,11 +18,11 @@ Above-and-beyond pathing syntax for nested-Array properties:
 
 ## Usage
 
-<pre>
-var _ = require('lodash-getpath'); // import lodash with the mixin provided
+```js
+const _ = require('lodash-getpath'); // import lodash with the mixin provided
 
 // simple object example
-var obj1 = { a: [1, 2, 3] };
+const obj1 = { a: [1, 2, 3] };
 _.getPath(obj1, 'a[0]') === 1;           // positive index
 _.getPath(obj1, 'a[0, 2]') === [1, 3];   // positive indexes
 _.getPath(obj1, 'a[1, 1]') === [2, 2];   // repeated indexes (ok!)
@@ -30,12 +30,11 @@ _.getPath(obj1, 'a[-1]') === 3;          // negative index
 _.getPath(obj1, 'a[-1, -2]') === [3, 2]; // negative indexes
 
 // a little more complex object
-var pathUsersNames = 'users[].name';
+const pathUsersNames = 'users[].name';
 _.getPath({ users: [{ name: 'Steve' },{ name: 'Sam' }] }, pathUsersNames) === ['Steve', 'Sam']; // all indexes, with sub-key
 
 // *any* complex object/array structure you can think of, pull out the data you need in a single query!
-...
-</pre>
+```
 
 Also available in the browser as simply `_getPath()` in the global context/window
 
